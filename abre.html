@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Minha Obra de Arte</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #1a0005;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        #btn-start {
+            padding: 20px 40px;
+            font-size: 1.3rem;
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            transition: 0.3s;
+        }
+
+        #btn-start:hover { transform: scale(1.1); background: #ff758f; }
+
+        .canvas {
+            display: none;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Foto da Obra de Arte */
+        .moldura {
+            position: relative;
+            width: 320px;
+            height: 450px;
+            border-radius: 25px;
+            overflow: hidden;
+            border: 6px solid #ff4d6d;
+            box-shadow: 0 0 50px rgba(255, 77, 109, 0.6);
+            z-index: 5;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .moldura img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Coração Gigante SVG */
+        svg {
+            position: absolute;
+            width: 850px;
+            height: 850px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .path-heart {
+            fill: none;
+            stroke: #ff4d6d;
+            stroke-width: 3;
+            stroke-dasharray: 2000;
+            stroke-dashoffset: 2000;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 12px #ff4d6d);
+        }
+
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+
+        .love-msg {
+            position: absolute;
+            bottom: 8%;
+            color: white;
+            text-align: center;
+            opacity: 0;
+            transition: 1s;
+            z-index: 20;
+            text-shadow: 0 0 15px #ff4d6d;
+        }
+
+        /* Corações da Explosão */
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;
+            z-index: 99;
+            color: #ff4d6d;
+            user-select: none;
+            animation: moveUp 3.5s linear forwards;
+        }
+
+        @keyframes moveUp {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0.5); opacity: 0; }
+            15% { opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="btn-start" onclick="run()">Aperte para ver uma obra de arte</button>
+
+    <div class="canvas" id="main">
+        <div class="moldura" id="photo">
+            <img src="foto.jpg" onerror="this.src='https://via.placeholder.com/320x450?text=Foto+Não+Encontrada'" alt="Amor">
+        </div>
+
+        <svg viewBox="0 0 200 200">
+            <path id="svg-heart" class="path-heart" 
+                d="M 100,65 
+                   C 100,55 90,35 60,35 
+                   C 20,35 20,95 100,155 
+                   C 180,95 180,35 140,35 
+                   C 110,35 100,55 100,65" />
+        </svg>
+
+        <div class="love-msg" id="msg">
+            <h1>Você é Maravilhosa! ❤️</h1>
+            <p>Minha obra de arte favorita.</p>
+        </div>
+    </div>
+
+    <script>
+        function run() {
+            document.getElementById('btn-start').style.display = 'none';
+            document.getElementById('main').style.display = 'flex';
+            
+            const photo = document.getElementById('photo');
+            const heart = document.getElementById('svg-heart');
+            const msg = document.getElementById('msg');
+
+            // 1. Revela foto
+            setTimeout(() => {
+                photo.style.opacity = '1';
+                photo.style.transform = 'scale(1)';
+            }, 300);
+
+            // 2. Desenha coração gigante
+            setTimeout(() => {
+                heart.style.animation = "draw 4s ease-in-out forwards";
+            }, 1200);
+
+            // 3. Chuva de corações sem erros
+            setTimeout(() => {
+                msg.style.opacity = '1';
+                setInterval(createHeart, 150);
+            }, 4800);
+        }
+
+        function createHeart() {
+            const container = document.body;
+            const heart = document.createElement('div');
+            const icons = ['❤️', '💖', '💗', '💓', '✨', '🌹'];
+            
+            heart.className = 'floating-heart';
+            heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+            
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+            heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
+            
+            container.appendChild(heart);
+            
+            // Limpa o elemento da memória
+            setTimeout(() => { heart.remove(); }, 4000);
+        }
+    </script>
+</body>
+</html>
